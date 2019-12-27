@@ -24,11 +24,62 @@ export class MapContainerComponent implements OnInit {
     const map = new mapboxgl.Map({
       container: mapElem,
       style: 'mapbox://styles/mapbox/streets-v11',
-      center: [139.74267643565133, 35.69432984468491],
-      zoom: 14,
-      pitch: 45,
+      center: [139.78667643565133, 35.666],
+      zoom: 17,
+      pitch: 50,
       bearing: -17.6,
       antialias: true,
+    });
+
+    // The 'building' layer in the mapbox-streets vector source contains building-height
+    // data from OpenStreetMap.
+    map.on('load', () => {
+      // Insert the layer beneath any symbol layer.
+      const layers = map.getStyle().layers;
+
+      let labelLayerId;
+      layers.forEach(layer => {
+        if (layer.type === 'symbol' && layer.layout['text-field']) {
+          labelLayerId = layer.id;
+        }
+      });
+
+      map.addLayer(
+        {
+          id: '3d-buildings',
+          source: 'composite',
+          'source-layer': 'building',
+          filter: ['==', 'extrude', 'true'],
+          type: 'fill-extrusion',
+          minzoom: 15,
+          paint: {
+            'fill-extrusion-color': '#aaa',
+
+            // use an 'interpolate' expression to add a smooth transition effect to the
+            // buildings as the user zooms in
+            'fill-extrusion-height': [
+              'interpolate',
+              ['linear'],
+              ['zoom'],
+              15,
+              0,
+              15.05,
+              ['get', 'height'],
+            ],
+            'fill-extrusion-base': [
+              'interpolate',
+              ['linear'],
+              ['zoom'],
+              15,
+              0,
+              15.05,
+              ['get', 'min_height'],
+            ],
+            'fill-extrusion-opacity': 0.6,
+          },
+        },
+        labelLayerId,
+      );
     });
   }
 }
