@@ -116,6 +116,40 @@ export class MapContainerComponent implements OnInit {
         },
         labelLayerId,
       );
+
+      // Polyline
+      map.addLayer({
+        id: 'route',
+        type: 'line',
+        source: {
+          type: 'geojson',
+          data: {
+            type: 'Feature',
+            properties: {},
+            geometry: {
+              type: 'LineString',
+              coordinates: [
+                [139.78502894751728, 35.66459051886714],
+                [139.78734637610617, 35.66629894998595],
+                [139.78623057715598, 35.667083421415114],
+                [139.78520060889426, 35.66633381554648],
+                [139.783891690895, 35.66535757409578],
+                [139.78502894751728, 35.66459051886714],
+              ],
+            },
+          },
+        },
+        layout: {
+          'line-join': 'round',
+          'line-cap': 'round',
+        },
+        paint: {
+          'line-color': '#f50057',
+          'line-width': 8,
+        },
+      });
+    });
+
     // Marker
     const marker = new mapboxgl.Marker({
       draggable: true,
