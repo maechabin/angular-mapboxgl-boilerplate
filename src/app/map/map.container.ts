@@ -24,7 +24,7 @@ export class MapContainerComponent implements OnInit {
     const map = new mapboxgl.Map({
       container: mapElem,
       style: 'mapbox://styles/mapbox/streets-v11',
-      center: [139.78667643565133, 35.666],
+      center: [139.78428591885523, 35.665650082797924],
       zoom: 17,
       pitch: 50,
       bearing: -17.6,
@@ -116,6 +116,15 @@ export class MapContainerComponent implements OnInit {
         },
         labelLayerId,
       );
+    // Marker
+    const marker = new mapboxgl.Marker({
+      draggable: true,
+    })
+      .setLngLat([139.78428591885523, 35.665650082797924])
+      .addTo(map);
+
+    marker.on('dragend', event => {
+      console.log(event.target.getLngLat());
     });
   }
 }
