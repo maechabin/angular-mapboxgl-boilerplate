@@ -31,6 +31,42 @@ export class MapContainerComponent implements OnInit {
       antialias: true,
     });
 
+    // NavigationControl（ズームボタンとコンパス）を表示
+    const nav = new mapboxgl.NavigationControl();
+    map.addControl(nav, 'top-left');
+
+    // GeolocationControl（現在地取得）を表示
+    map.addControl(
+      new mapboxgl.GeolocateControl({
+        positionOptions: {
+          enableHighAccuracy: true,
+        },
+        trackUserLocation: true,
+      }),
+    );
+
+    // 属性を表示
+    map.addControl(
+      new mapboxgl.AttributionControl({
+        compact: true,
+      }),
+    );
+
+    // scale（距離）を表示
+    const scale = new mapboxgl.ScaleControl({
+      maxWidth: 80,
+      unit: 'imperial',
+    });
+    map.addControl(scale);
+    scale.setUnit('metric');
+
+    // 全画面表示ボタンを表示
+    map.addControl(
+      new mapboxgl.FullscreenControl({
+        container: document.querySelector('body'),
+      }),
+    );
+
     // The 'building' layer in the mapbox-streets vector source contains building-height
     // data from OpenStreetMap.
     map.on('load', () => {
